@@ -63,7 +63,10 @@ if __name__ == "__main__":
         # s = "ABCD"
         b = bytearray(contents) 
         print(b)
-        print(unpack('>'+'h'*(len(b)//2),b))
+        intarray = list(unpack('>'+'h'*(len(b)//2),b))
+        print(intarray)
+        if intarray[0] == 0:
+            peripheral.disconnect()
         # for i in contents:
         #     print(unpack('H', pack('h', i))[0])
         #     intarray.append(unpack('H', pack('b', i))[0])
@@ -71,5 +74,3 @@ if __name__ == "__main__":
         # print(intarray)
         # b.extend(contents.encode())
         # print(f"Contents: {b}")
-
-    peripheral.disconnect()
