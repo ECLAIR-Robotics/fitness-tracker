@@ -26,7 +26,7 @@ def connect(file_idx):
 
     adapter.set_callback_on_scan_start(lambda: print("Scan started."))
     adapter.set_callback_on_scan_stop(lambda: print("Scan complete."))
-    adapter.set_callback_on_scan_found(lambda peripheral: print(f"Found {peripheral.identifier()} [{peripheral.address()}]"))
+    # adapter.set_callback_on_scan_found(lambda peripheral: print(f"Found {peripheral.identifier()} [{peripheral.address()}]"))
 
     # Scan for 5 seconds
     adapter.scan_for(5000)
@@ -102,7 +102,7 @@ def connect(file_idx):
         
         ctr_b = bytearray(control_contents)
         ctr_array = list(unpack('>'+'h'*(len(ctr_b)//2),ctr_b))
-        print(ctr_array) 
+        # print(ctr_array) 
         # The contents are: [save, person, exercise, baseline]
         # save = 0 to save file and quit, 1 otherwise
         # baseline = 1 to save file as a baseline, 0 otherwise
@@ -116,6 +116,7 @@ def connect(file_idx):
                 pass
             # save like a normal file
             f.close()
+            print("RECORDED FILE" + "data" + str(file_idx) + ".csv")
             peripheral.disconnect()
             break
         
@@ -125,8 +126,8 @@ def connect(file_idx):
         f.write(to_string(imu_intarray)+",")
         
         time_b = bytearray(time_contents)
-        time_long = unpack('>'+'L'*(len(time_b)//4),time_b)[0]
-        print("Time :  ", time_long)
+        time_long = unpack('<'+'L'*(len(time_b)//4),time_b)[0]
+        # print("Time :  ", time_long)
         
         f.write(str(time_long) + ",")
         
@@ -143,7 +144,7 @@ def connect(file_idx):
 
 
 if __name__ == "__main__":
-    file_idx = 1
+    file_idx = 28
     while True:
         connect(file_idx)
         file_idx += 1
