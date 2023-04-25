@@ -144,7 +144,7 @@ def connect(file_idx):
 
 
 if __name__ == "__main__":
-    file_idx = 36
+    file_idx = 35
     while True:
         connect(file_idx)
         file_idx += 1
