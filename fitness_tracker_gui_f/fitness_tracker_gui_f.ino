@@ -3,8 +3,9 @@
 #include <avr/pgmspace.h>
 #include <ArduinoBLE.h>
 #include <Arduino_LSM9DS1.h>
+#include <string>
 
-
+using namespace std;
 /* 
  * GUI Vars
  */ 
@@ -138,18 +139,24 @@ void setup() {
 void displayLeft(char* text){
   SeeedGrayOled.setTextXY(8,0);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(5); //Set Grayscale level. Any number between 0 - 15.
+  // string out = "G: " + string(text);
+  // Serial.println(out.c_str());
   SeeedGrayOled.putString(text); //Print Hello World
 }
 
 void displayMiddle(char* text){
   SeeedGrayOled.setTextXY(10,5);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(5); //Set Grayscale level. Any number between 0 - 15.
+  // string out = "B: " + string(text);
+  // Serial.println(out.c_str());
   SeeedGrayOled.putString(text); //Print Hello World
 }
 
 void displayRight(char* text){
   SeeedGrayOled.setTextXY(12,10);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(5); //Set Grayscale level. Any number between 0 - 15.
+  // string out = "R: " + string(text);
+  // Serial.println(out.c_str());
   SeeedGrayOled.putString(text); //Print Hello World
   
 }
@@ -157,12 +164,14 @@ void displayRight(char* text){
 void displayTop(char* text){
   SeeedGrayOled.setTextXY(1,3);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(0); //Set Grayscale level. Any number between 0 - 15.
+  // Serial.println(text);
   SeeedGrayOled.putString(text); //Print Hello World
 }
 
 void displaySecondTop(char* text){
   SeeedGrayOled.setTextXY(5,5);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(0); //Set Grayscale level. Any number between 0 - 15.
+  // Serial.println(text);
   SeeedGrayOled.putString(text); //Print Hello World
 }
 void displayStartMenu() {
@@ -218,7 +227,7 @@ void displayLooking(){
   displayRight("Connection");
 }
 
-void displayLooking2(){
+void displayLooking2(){ //HERE
   // SeeedGrayOled.clearDisplay();
   displayTop(exercises[chosenExercise]);
   displaySecondTop("LOOKING");
