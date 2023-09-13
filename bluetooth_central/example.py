@@ -148,7 +148,8 @@ if __name__ == "__main__":
     # 72-81 is left, 84-94 right, each 5 reps
     # 95: 49 rep 10lbs, 97 - 8 rep 20lb,left to failure
     # 96: 43 rep 10lbs, 98 - 8 rep 20lb, right arm to failure
-    file_idx = 94
+    # 99 right resting, 101 left resting
+    file_idx = 102
     while True:
         connect(file_idx)
         file_idx += 1
