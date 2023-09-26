@@ -36,6 +36,7 @@ def connect(file_idx):
     peripheral_short = False
     print("Please select a peripheral:")
     for i, peripheral in enumerate(peripherals):
+#         if ((peripheral.identifier() == "Nano 33 BLE" or peripheral.identifier() == "Arduino") and (peripheral.address() == "e6:cc:73:24:26:6a" or peripheral.address() == "21A0686B-64DB-0EAA-388C-CEDA3B644985")):
         if (peripheral.identifier() == "Nano 33 BLE" and peripheral.address() == "e6:cc:73:24:26:6a"):
             choice = i
             peripheral_short = True
