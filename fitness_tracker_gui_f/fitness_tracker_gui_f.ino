@@ -28,7 +28,7 @@ int globalState = 0;
 */
 int chosenExercise = -1;
 // Needs an array of available exercises
-char *exercises[] = { "B. Curl", "Squat",  "Lat Raise"};
+char *exercises[] = { "Curl", "Squat",  "Lat Raise"};
 int personNum = 1;
 
 
@@ -65,7 +65,7 @@ void loading() {
 
 void initializeDisplay(){
   SeeedGrayOled.init(SH1107G);                 // initialize SEEED OLED display
-  // SeeedGrayOled.setInverseDisplay();    // Set display to inverse mode
+  //SeeedGrayOled.setInverseDisplay();    // Set display to inverse mode
   SeeedGrayOled.clearDisplay();         // Clear Display.
   SeeedGrayOled.setVerticalMode();      // Set to vertical mode for displaying text
 }
@@ -139,21 +139,20 @@ void setup() {
 void displayLeft(char* text){
   SeeedGrayOled.setTextXY(8,0);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(5); //Set Grayscale level. Any number between 0 - 15.
-  // string out = "G: " + string(text);
+  string out = "R: " + string(text);
   // Serial.println(out.c_str());
-  SeeedGrayOled.putString(text); //Print Hello World
+  SeeedGrayOled.putString(out.c_str()); //Print Hello World
 }
 
 void displayMiddle(char* text){
-  SeeedGrayOled.setTextXY(10,5);  //set Cursor to ith line, jth column
+  SeeedGrayOled.setTextXY(10,1);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(5); //Set Grayscale level. Any number between 0 - 15.
-  // string out = "B: " + string(text);
   // Serial.println(out.c_str());
   SeeedGrayOled.putString(text); //Print Hello World
 }
 
 void displayRight(char* text){
-  SeeedGrayOled.setTextXY(12,10);  //set Cursor to ith line, jth column
+  SeeedGrayOled.setTextXY(12,1);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(5); //Set Grayscale level. Any number between 0 - 15.
   // string out = "R: " + string(text);
   // Serial.println(out.c_str());
@@ -162,7 +161,7 @@ void displayRight(char* text){
 }
 
 void displayTop(char* text){
-  SeeedGrayOled.setTextXY(1,3);  //set Cursor to ith line, jth column
+  SeeedGrayOled.setTextXY(1,0);  //set Cursor to ith line, jth column
   SeeedGrayOled.setGrayLevel(0); //Set Grayscale level. Any number between 0 - 15.
   // Serial.println(text);
   SeeedGrayOled.putString(text); //Print Hello World
@@ -176,7 +175,7 @@ void displaySecondTop(char* text){
 }
 void displayStartMenu() {
   SeeedGrayOled.clearDisplay(); 
-  displayRight("Pick Exercises");
+  displayRight("Press Green");
 }
 
 void displayExerciseMenu() {
@@ -419,6 +418,12 @@ void record(short* control){
   y_g = 0;
   z_g = 0;
   byte byte_arr [18];
+  /*
+    Accelerometer output data rate is fixed at 104 Hz.
+    Gyroscope output data rate is fixed at 104 Hz.
+    Magnetometer output data rate is fixed at 20 Hz. 
+    The data caputures differ (in terms of timestamps) by 312 "units"
+  */
   // poll acc
   if (IMU.accelerationAvailable()) { // values from -128 to 127
     IMU.readAcceleration(fx_a, fy_a, fz_a);
