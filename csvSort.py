@@ -2,7 +2,8 @@ import os
 import csv
 
 # path to the folder containing the csv files
-src_path = './IMU_data'
+src1_path = './IMU_data/bicep curl/'
+src2_path = './IMU_data/squat/'
 
 def csvSort(src_path):
 
@@ -19,38 +20,26 @@ def csvSort(src_path):
                 reader = csv.reader(file)
                 header = next(reader)
                 #check 12th element of the header, and os path join src_path and the last element
-                put_path = os.path.join(src_path, header[11])
 
                 #check to see if this path doesn't exist and create it
                 if not os.path.exists(put_path):
                     os.makedirs(put_path)
-                #now check the 10th element and os path join put_path and the exercise name
                 
-                grade = header[10]
-                
-                is_failure = False
-                #read through the whole file to make sure that the grade is consistent
-                for row in reader:
-                    #check to see if grade goes up
-                    try:
-                        if row[10] > grade:
-                            is_failure = True
-                            break
-                    except IndexError:
-                        continue
-
-                if is_failure:
-                    print("Failure")
-                    put_path = os.path.join(put_path, "to_failure")
+                #check if the file's name has MOV in it
+                if "MOV" in item:
+                    put_path = os.path.join(put_path, "MOVING")
                     if not os.path.exists(put_path):
                         os.makedirs(put_path)
-                else: # if the grade is consistent, then move the file to a directory based on grade
+                elif "FIND" in item:
+                    put_path = os.path.join(put_path, "LOST")
+                    if not os.path.exists(put_path):
+                        os.makedirs(put_path)
+                #normal case, categorize based on grade
+                else:
                     put_path = os.path.join(put_path, header[10])
-                
-                if not os.path.exists(put_path):
-                    os.makedirs(put_path)
-                #close the file 
-                                
+                    if not os.path.exists(put_path):
+                        os.makedirs(put_path)
+
                 #move the file to the new directory
                 os.rename(item_path, os.path.join(put_path, item))
                 #move the rep_count file cursor to the next line
@@ -58,7 +47,8 @@ def csvSort(src_path):
     return
 
 def main():
-    csvSort(src_path)
+    csvSort(src1_path)
+    csvSort(src2_path)
 
 if __name__ == "__main__":
     main()
