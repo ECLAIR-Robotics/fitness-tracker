@@ -7,7 +7,7 @@
 ###################################################################
 
 '''
-currently just visualizes Y_accelerometer, which is a rough approximator for cycle/period length (e.g. valleys represent end of rep)
+Currently just visualizes Y_accelerometer, which is a rough approximator for cycle/period length (e.g. valleys represent end of rep)
 '''
 
 import sys
@@ -65,8 +65,10 @@ class CustomMainWindow(QMainWindow):
         self.myFig.addData(value)
         return
 
-''' End Class '''
 
+'''
+an attempt at including all data points. currently unsuccessful/unused, but would be cool as a live running visual
+'''
 def plot_activity(activity, data):
     fig, (ax0, ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8) = matplotlib.subplots(nrows=9,
          figsize=(30, 20),
@@ -102,7 +104,6 @@ def read_data(file_path):
                      names=column_names)
 
     return df
-
 
 
 class CustomFigCanvas(FigureCanvas, TimedAnimation):
@@ -212,38 +213,41 @@ class Communicate(QObject):
 
 ''' End Class '''
 
-
-
 def dataSendLoop(addData_callbackFunc):
     # Setup the signal-slot mechanism.
     mySrc = Communicate()
     mySrc.data_signal.connect(addData_callbackFunc)
 
+    # iterate through all of the files, one after another, and read their Y-acc
     fileNum = 1
-    # s = '../IMU_data/data91.csv'
     s = '../IMU_data/data9'+str(fileNum)+'.csv'
     df = read_data(s)
-    currFilePeak = 0
-    goingUp = True
-    # df = read_data('../IMU_data/data91.csv')
     df['timestamp'] = (df['timestamp'] - df['timestamp'][0])/1000   
 
     y = df['Y_a']
-    prevPeakTime, prevPeriod = 0, 0
+
+    # Deprecated variables
+    # currFilePeak = 0
+    # prevPeakTime, prevPeriod = 0, 0
     # plot_activity("Activity", subset)
 
     # Simulate some data
     # n = np.linspace(0, 499, 500)
     # y = 50 + 25*(np.sin(n / 8.3)) + 10*(np.sin(n / 7.5)) - 5*(np.sin(n / 1.5))
-    i = 0
 
     # print(np.shape(y), int(np.shape(y)[0]), y)
 
+    # Data is read into the list y, and the current signal value is y[i]
     while(True):
+        # Handle iterating to the next file
         if(i >= int(np.shape(y)[0])):
             i = 0
+            repCount = 0
+            firstRep = True
+            valleyValue = -200
+            goingUp = True
+
             s = '../IMU_data/data'+str(fileNum)+'.csv'
-            # s = '../IMU_data/data91.csv'
             df = read_data(s)
             df['timestamp'] = (df['timestamp'] - df['timestamp'][0])/1000   
             y = df['Y_a']
@@ -251,21 +255,35 @@ def dataSendLoop(addData_callbackFunc):
                 fileNum = 0
                 continue
             fileNum += 1
-            goingUp = True
+
         time.sleep(0.1)
-        mySrc.data_signal.emit(y[i]) # <- Here you emit a signal!
-        if y[i] < currFilePeak and goingUp:
+        mySrc.data_signal.emit(y[i]) # <- Here you emit a signal to the visual!
+
+        # logic for counting reps (i.e. periods)
+        if i != 0 and y[i] < y[i - 1] and goingUp:
+            # peak
             goingUp = False
-            currPeakTime = datetime.now().timestamp()
-            period = currPeakTime - prevPeakTime
-            if abs((period - prevPeriod)) > 1 and prevPeriod != 0:
-                # print("Slow!", period, prevPeriod, period-prevPeriod)
-                print("Slow! Predicted good-form period: ", period-prevPeriod)
-            prevPeriod = currPeakTime
-        else:
+        elif i != 0 and y[i] > y[i - 1] and not goingUp:
+            # valley
+            if firstRep:
+                firstRep = False
+                valleyValue = y[i]
+            # print("Valley value: ", y[i])
             goingUp = True
-            currFilePeak = y[i]
+            if abs(y[i] - valleyValue) < 10:
+                repCount += 1
+                print("Rep: ", repCount)
         i += 1
+        
+        #     currPeakTime = datetime.now().timestamp()
+        #     period = currPeakTime - prevPeakTime
+        #     print("here")
+        #     if abs((period - prevPeriod)) > 1 and prevPeriod != 0:
+        #         # print("Slow!", period, prevPeriod, period-prevPeriod)
+        #         prevPeriod = currPeakTime
+        # else:
+        #     goingUp = True
+        #     currFilePeak = y[i]
     ###
 ###
 
