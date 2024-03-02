@@ -236,17 +236,18 @@ def dataSendLoop(addData_callbackFunc):
     # y = 50 + 25*(np.sin(n / 8.3)) + 10*(np.sin(n / 7.5)) - 5*(np.sin(n / 1.5))
 
     # print(np.shape(y), int(np.shape(y)[0]), y)
+    i = 0
+    repCount = 0
+    valleyValue = -200
+    goingUp = True
+    firstRep = True
 
     # Data is read into the list y, and the current signal value is y[i]
     while(True):
         # Handle iterating to the next file
         if(i >= int(np.shape(y)[0])):
             i = 0
-            repCount = 0
             firstRep = True
-            valleyValue = -200
-            goingUp = True
-
             s = '../IMU_data/data'+str(fileNum)+'.csv'
             df = read_data(s)
             df['timestamp'] = (df['timestamp'] - df['timestamp'][0])/1000   
